@@ -1,5 +1,5 @@
 {
-    "name": "ITM/StorageBundle",
+    "name": "itm/storage-bundle",
     "description": "Symfony2 storage bundle",
     "version": "1.0.0",
     "type": "symfony-bundle",
@@ -13,6 +13,10 @@
         {
             "name": "Alexander Sholk",
             "email": "alex.sholk@itmhouse.com"
+        },
+        {
+            "name": "Alexander Samusevich",
+            "email": "aleksander.samusevich@itmhouse.com"
         }
     ],
     "require": {
