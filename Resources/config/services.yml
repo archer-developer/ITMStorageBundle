@@ -1,0 +1,7 @@
+services:
+    gaufrette.filesystem:
+        class:      ITM\StorageBundle\Util\GaufretteFilesystem
+
+    itm.storage:
+        class:      ITM\StorageBundle\Util\StorageManipulator
+        arguments:  ['@gaufrette.filesystem']
