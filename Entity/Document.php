@@ -48,6 +48,12 @@ class Document
     protected $attributes;
 
     /**
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="documents")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     **/
+    protected $user;
+
+    /**
      * Get id
      *
      * @return integer 
@@ -193,5 +199,28 @@ class Document
     public function getAttributes()
     {
         return $this->attributes;
+    }
+
+    /**
+     * Set user
+     *
+     * @param \ITM\StorageBundle\Entity\User $user
+     * @return Document
+     */
+    public function setUser(\ITM\StorageBundle\Entity\User $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \ITM\StorageBundle\Entity\User 
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }

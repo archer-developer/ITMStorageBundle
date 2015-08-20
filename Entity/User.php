@@ -3,6 +3,7 @@
 namespace ITM\StorageBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
@@ -32,6 +33,15 @@ class User
      */
     protected $token;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Document", mappedBy="user")
+     **/
+    protected $documents;
+
+    public function __construct()
+    {
+        $this->features = new ArrayCollection();
+    }
     /**
      * Get id
      *
@@ -109,5 +119,38 @@ class User
     public function getToken()
     {
         return $this->token;
+    }
+
+    /**
+     * Add documents
+     *
+     * @param \ITM\StorageBundle\Entity\Document $documents
+     * @return User
+     */
+    public function addDocument(\ITM\StorageBundle\Entity\Document $documents)
+    {
+        $this->documents[] = $documents;
+
+        return $this;
+    }
+
+    /**
+     * Remove documents
+     *
+     * @param \ITM\StorageBundle\Entity\Document $documents
+     */
+    public function removeDocument(\ITM\StorageBundle\Entity\Document $documents)
+    {
+        $this->documents->removeElement($documents);
+    }
+
+    /**
+     * Get documents
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getDocuments()
+    {
+        return $this->documents;
     }
 }
