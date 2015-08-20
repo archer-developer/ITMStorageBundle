@@ -23,7 +23,7 @@ class User
     protected $created_at;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     protected $deleted_at;
 
