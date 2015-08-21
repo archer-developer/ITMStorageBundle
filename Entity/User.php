@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * @ORM\Entity
  * @ORM\Table(name="user")
+ * @ORM\HasLifecycleCallbacks()
  */
 class User
 {
@@ -42,6 +43,15 @@ class User
     {
         $this->features = new ArrayCollection();
     }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function prePersist()
+    {
+        $this->created_at = new \DateTime();
+    }
+
     /**
      * Get id
      *

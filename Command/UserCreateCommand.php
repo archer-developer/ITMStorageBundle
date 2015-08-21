@@ -19,7 +19,6 @@ class UserCreateCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $user = new User();
-        $user->setCreatedAt(new \DateTime());
         $token = password_hash(microtime() . rand(0, 1000), PASSWORD_BCRYPT);
         $user->setToken($token);
 

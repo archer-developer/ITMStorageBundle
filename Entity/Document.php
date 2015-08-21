@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="document")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Document
 {
@@ -28,30 +29,47 @@ class Document
     protected $updated_at;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     protected $deleted_at;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    protected $name;
+    protected $name = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    protected $path;
+    protected $path = '';
 
     /**
      * @ORM\Column(type="text")
      */
-    protected $attributes;
+    protected $attributes = '';
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="documents")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      **/
     protected $user;
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function prePersist()
+    {
+        $this->created_at = new \DateTime();
+        $this->updated_at = new \DateTime();
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function preUpdate()
+    {
+        $this->updated_at = new \DateTime();
+    }
 
     /**
      * Get id
