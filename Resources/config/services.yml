@@ -1,7 +1,6 @@
 services:
-    gaufrette.filesystem:
-        class:      ITM\StorageBundle\Util\GaufretteFilesystem
-
     itm.storage:
         class:      ITM\StorageBundle\Util\StorageManipulator
-        arguments:  ['@gaufrette.filesystem']
+        arguments:
+            - @knp_gaufrette.filesystem_map
+            - @doctrine
