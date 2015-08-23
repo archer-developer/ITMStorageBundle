@@ -5,6 +5,7 @@ namespace ITM\StorageBundle\Util;
 use Doctrine\Bundle\DoctrineBundle\Registry;;
 use ITM\StorageBundle\Entity\Document;
 use Knp\Bundle\GaufretteBundle\FilesystemMap;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 class StorageManipulator
 {
@@ -22,17 +23,25 @@ class StorageManipulator
     /**
      * Copy file in storage and create Document
      *
-     * @param $filepath
+     * @param $file_path
      * @param string $attributes
-     * @return bool
+     * @param string $name
+     * @return Document
+     * @throws \Exception
      */
-    public function store($filepath, $attributes = '')
+    public function store($file_path, $attributes = '', $name = null)
     {
-        if (!file_exists($filepath)) return false;
+        if (!file_exists($file_path)){
+            throw new \Exception('File not found: ' . $file_path);
+        }
+
+        // Атомарное сохранение файла и сущности
+        $con = $this->doctrine->getConnection();
+        $con->beginTransaction();
 
         // Create Document object
         $document = new Document();
-        $document->setName(basename($filepath));
+        $document->setName((is_string($name)) ? $name : basename($file_path));
         $document->setAttributes($attributes);
         $em = $this->doctrine->getManager();
         $em->persist($document);
@@ -41,11 +50,11 @@ class StorageManipulator
         // Generate path by id
         $id = $document->getId();
         $path = join('/', self::splitStringIntoPairs($id)) . '/' . $id;
-        $extension = pathinfo($filepath, PATHINFO_EXTENSION);
+        $extension = pathinfo($file_path, PATHINFO_EXTENSION);
         if ($extension) $path .= '.' . $extension;
 
         // Copy file into storage
-        $content = file_get_contents($filepath);
+        $content = file_get_contents($file_path);
         $this->filesystem->write($path, $content);
 
         // Update path in database
@@ -53,7 +62,9 @@ class StorageManipulator
         $em->persist($document);
         $em->flush();
 
-        return true;
+        $con->commit();
+
+        return $document;
     }
 
     /**

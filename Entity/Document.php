@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="document")
  * @ORM\HasLifecycleCallbacks()
  */
-class Document
+class Document implements \JsonSerializable
 {
     /**
      * @ORM\Column(type="integer")
@@ -53,6 +53,16 @@ class Document
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      **/
     protected $user;
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'attributes' => $this->getAttributes(),
+            'created_at' => $this->getCreatedAt()->getTimestamp(),
+        ];
+    }
 
     /**
      * @ORM\PrePersist
