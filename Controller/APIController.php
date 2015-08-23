@@ -16,15 +16,19 @@ use Symfony\Component\HttpFoundation\FileBag;
 use Symfony\Component\HttpFoundation\Request;
 use ITM\StorageBundle\Util\JsonAPITrait;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/api")
  */
 class APIController extends Controller
 {
+    // Шаблоны генерации ответа API
     use JsonAPITrait;
 
     /**
+     * Приветствие
+     *
      * @Route("/")
      * @Template()
      * @return JsonResponse
@@ -36,6 +40,7 @@ class APIController extends Controller
 
     /**
      * Сохранение файла или массива файлов в хранилище
+     *
      * @Route("/store")
      * @Template()
      * @param Request $request
@@ -81,22 +86,65 @@ class APIController extends Controller
     }
 
     /**
+     * Получение объекта документа из хранилища
+     *
      * @Route("/load")
      * @Template()
      * @param Request $request
+     * @return JsonResponse
      */
     public function loadAction(Request $request)
     {
+        $id = intval($request->get('id'));
+        if(!$id){
+            return $this->error('Document ID not found');
+        }
 
+        $storage = $this->container->get('itm.storage');
+        try{
+            $document = $storage->get($id);
+        }
+        catch(\Exception $e){
+            return $this->error($e->getMessage(), $e->getTraceAsString());
+        }
+
+        return $this->response($document);
     }
 
     /**
+     * Скачивание файла
+     *
      * @Route("/get-content")
      * @Template()
      * @param Request $request
+     * @return Response
      */
     public function getContentAction(Request $request)
     {
+        $id = intval($request->get('id'));
+        if(!$id){
+            return $this->error('Document ID not found');
+        }
 
+        $storage = $this->container->get('itm.storage');
+
+        try{
+            $document = $storage->get($id);
+
+            $response = new Response();
+
+            $response->headers->set('Cache-Control', 'private');
+            $response->headers->set('Content-type', $storage->getMimeType($id));
+            $response->headers->set('Content-Disposition', 'attachment; filename="' . $document->getName() . '";');
+            $response->headers->set('Content-length', $storage->getSize($id));
+
+            $response->sendHeaders();
+            $response->setContent($storage->getContent($id));
+        }
+        catch(\Exception $e){
+            return $this->error($e->getMessage(), $e->getTraceAsString());
+        }
+
+        return $response;
     }
 }

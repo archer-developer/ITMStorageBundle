@@ -82,14 +82,53 @@ class StorageManipulator
      * Get file content
      *
      * @param $id
+     * @throws \Exception
      * @return sting|null
      */
     public function getContent($id)
     {
         $document = $this->get($id);
-        if (!$document) return;
+        if (!$document){
+            throw new \Exception('Document not found');
+        }
+
+        $this->filesystem->mimeType($document->getPath());
 
         return $this->filesystem->read($document->getPath());
+    }
+
+    /**
+     * Get file mime-type
+     *
+     * @param $id
+     * @throws \Exception
+     * @return sting|null
+     */
+    public function getMimeType($id)
+    {
+        $document = $this->get($id);
+        if (!$document){
+            throw new \Exception('Document not found');
+        }
+
+        return $this->filesystem->mimeType($document->getPath());
+    }
+
+    /**
+     * Get file size
+     *
+     * @param $id
+     * @throws \Exception
+     * @return sting|null
+     */
+    public function getSize($id)
+    {
+        $document = $this->get($id);
+        if (!$document){
+            throw new \Exception('Document not found');
+        }
+
+        return $this->filesystem->size($document->getPath());
     }
 
     /**
@@ -97,13 +136,16 @@ class StorageManipulator
      *
      * @param $id
      * @param bool|false $softDelete
+     * @throws \Exception
      */
     public function delete($id, $softDelete = true)
     {
         $em = $this->doctrine->getManager();
 
         $document = $this->get($id);
-        if (!$document) return;
+        if (!$document){
+            throw new \Exception('Document not found');
+        }
 
         if ($softDelete) {
             $document->setDeletedAt(new \DateTime());
