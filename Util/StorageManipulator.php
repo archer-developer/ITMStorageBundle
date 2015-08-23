@@ -10,11 +10,12 @@ class StorageManipulator
 {
     protected $filesystem; // Gaufrette filesystem
     protected $doctrine; // Doctrine registry
+    protected $filesystem_name;
 
-    public function __construct(FilesystemMap $filesystemMap, Registry $doctrine)
+    public function __construct(FilesystemMap $filesystemMap, Registry $doctrine, $filesystem_name)
     {
-        /** @todo Remove HC */
-        $this->filesystem = $filesystemMap->get('itm');
+        $this->filesystem_name = $filesystem_name;
+        $this->filesystem = $filesystemMap->get($this->filesystem_name);
         $this->doctrine = $doctrine;
     }
 
