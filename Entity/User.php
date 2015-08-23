@@ -12,6 +12,8 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
  */
 class User
 {
+    use ORMBehaviors\Timestampable\Timestampable;
+    
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
