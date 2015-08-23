@@ -3,6 +3,7 @@
 namespace ITM\StorageBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -18,17 +19,17 @@ class UserListCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $em = $this->getContainer()->get('doctrine')->getManager();
-        $users = $em->createQuery(
-            'SELECT u
-            FROM StorageBundle:User u
-            WHERE u.deleted_at IS NULL
-            ORDER BY u.id ASC'
-        )->getResult();
+        $users = $em->getRepository('StorageBundle:User')->listUsers();
 
-        $output->writeln("Id \t Created at \t\t Token");
+        $table = new Table($output);
+        $table->setHeaders(['ID', 'Created at', 'Token']);
         foreach ($users as $user) {
-            $createdAt = $user->getCreatedAt()->format('H:i d.m.Y');
-            $output->writeln("{$user->getId()} \t $createdAt \t {$user->getToken()}");
+            $table->addRow([
+                $user->getId(),
+                $user->getCreatedAt()->format('H:i d.m.Y'),
+                $user->getToken(),
+            ]);
         }
+        $table->render();
     }
 }
