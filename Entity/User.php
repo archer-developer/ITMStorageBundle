@@ -4,25 +4,22 @@ namespace ITM\StorageBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
  * @ORM\Entity(repositoryClass="ITM\StorageBundle\Entity\Repository\UserRepository")
  * @ORM\Table(name="user")
- * @ORM\HasLifecycleCallbacks()
  */
 class User
 {
+    use ORMBehaviors\Timestampable\Timestampable;
+    
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    protected $created_at;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -45,14 +42,6 @@ class User
     }
 
     /**
-     * @ORM\PrePersist
-     */
-    public function prePersist()
-    {
-        $this->created_at = new \DateTime();
-    }
-
-    /**
      * Get id
      *
      * @return integer 
@@ -60,29 +49,6 @@ class User
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set created_at
-     *
-     * @param \DateTime $createdAt
-     * @return User
-     */
-    public function setCreatedAt($createdAt)
-    {
-        $this->created_at = $createdAt;
-
-        return $this;
-    }
-
-    /**
-     * Get created_at
-     *
-     * @return \DateTime 
-     */
-    public function getCreatedAt()
-    {
-        return $this->created_at;
     }
 
     /**
