@@ -5,7 +5,6 @@ namespace ITM\StorageBundle\Util;
 use Doctrine\Bundle\DoctrineBundle\Registry;;
 use ITM\StorageBundle\Entity\Document;
 use Knp\Bundle\GaufretteBundle\FilesystemMap;
-use Symfony\Component\Config\Definition\Exception\Exception;
 
 class StorageManipulator
 {
