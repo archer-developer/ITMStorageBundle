@@ -81,6 +81,18 @@ For delete user run:
 
 	php app/console itm:storage:user-delete <token>
 
+Store file with attributes in the storage:
+
+	php app/console itm:storage:document-store <filepath> [<attributes>]
+
+Get document info by id:
+
+	itm:storage:document-info <id>
+
+Copy file info specified path:
+
+	itm:storage:document-get <id> <path>
+
 ### Web API
 
 Store files:
