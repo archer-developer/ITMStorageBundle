@@ -3,7 +3,6 @@
 namespace ITM\StorageBundle\Controller;
 
 use ITM\StorageBundle\Entity\Document;
-use ITM\StorageBundle\Util\StorageManipulator;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
