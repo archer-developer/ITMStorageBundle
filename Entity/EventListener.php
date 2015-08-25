@@ -3,6 +3,7 @@
 namespace ITM\StorageBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -14,7 +15,7 @@ class EventListener
     const EVENT_ADD_DOCUMENT = 1;
 
     protected static $events = [
-        self::EVENT_ADD_DOCUMENT
+        self::EVENT_ADD_DOCUMENT,
     ];
 
     /**
@@ -43,6 +44,14 @@ class EventListener
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getAvailableEvents()
+    {
+        return self::$events;
     }
 
     /**
@@ -76,6 +85,9 @@ class EventListener
      */
     public function setEvent($event)
     {
+        if(!in_array($event, self::$events)){
+            throw new \Exception('Undefined event passed');
+        }
         $this->event = $event;
 
         return $this;

@@ -21,9 +21,9 @@ This bundle can be installed using [composer](https://getcomposer.org/):
         $bundles = array(
     
         	// ...
-    		new ITM\StorageBundle\StorageBundle(),
-        	new Knp\Bundle\GaufretteBundle\KnpGaufretteBundle(),
-			new Knp\DoctrineBehaviors\Bundle\DoctrineBehaviorsBundle(),
+            new ITM\StorageBundle\StorageBundle(),
+            new Knp\Bundle\GaufretteBundle\KnpGaufretteBundle(),
+            new Knp\DoctrineBehaviors\Bundle\DoctrineBehaviorsBundle(),
         );
     
     	// ...
@@ -62,6 +62,8 @@ Finally add routing configuration:
 	    resource: "@StorageBundle/Controller/"
 	    type:     annotation
 	    prefix:   itm-storage 
+
+Next update your doctrine schema
 
 ## Usage
 

@@ -36,7 +36,7 @@ class Document implements \JsonSerializable
     protected $path = '';
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $attributes = '';
 

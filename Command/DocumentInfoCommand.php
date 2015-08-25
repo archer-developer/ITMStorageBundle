@@ -30,7 +30,7 @@ class DocumentInfoCommand extends ContainerAwareCommand
             if (!$document) throw new \Exception('Document not found');
 
             $table = new Table($output);
-            $table->setHeaders(['ID', 'Name', 'Path', 'Attributes', 'Created at', 'Updated At']);
+            $table->setHeaders(['ID', 'Name', 'Internal Path', 'Attributes', 'Created at', 'Updated At']);
             $table->addRow([
                 $document->getId(),
                 $document->getName(),

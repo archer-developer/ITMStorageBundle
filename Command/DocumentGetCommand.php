@@ -20,7 +20,7 @@ class DocumentGetCommand extends ContainerAwareCommand
                 'Document id'
             )
             ->addArgument(
-                'path',
+                'target-dir',
                 InputArgument::REQUIRED,
                 'Target path'
             );
@@ -30,7 +30,7 @@ class DocumentGetCommand extends ContainerAwareCommand
     {
         try {
             $id = $input->getArgument('id');
-            $path = realpath($input->getArgument('path'));
+            $path = realpath($input->getArgument('target-dir'));
             if (!$path) throw new \Exception('Target directory not exists');
             if (!is_writable($path)) throw new \Exception('Target directory is not writable');
 
@@ -41,7 +41,7 @@ class DocumentGetCommand extends ContainerAwareCommand
             if (file_put_contents($path, $content) === false)
                 throw new \Exception('Аn error occurred while writing the file');
 
-            $output->writeln('File copied in ' . $input->getArgument('path'));
+            $output->writeln('File copied in ' . $input->getArgument('target-dir'));
         } catch (\Exception $e) {
             $output->writeln($e->getMessage());
         }

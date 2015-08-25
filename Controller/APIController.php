@@ -8,6 +8,7 @@
 
 namespace ITM\StorageBundle\Controller;
 
+use ITM\StorageBundle\Entity\EventListener;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Config\Definition\Exception\Exception;
@@ -146,5 +147,71 @@ class APIController extends Controller
         }
 
         return $response;
+    }
+
+    /**
+     * Создание слушателя события хранилища
+     *
+     * @Route("/add-event-listener")
+     * @Template()
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function addEventListenerAction(Request $request)
+    {
+        $callbackUrl = $request->get('callback_url');
+        if(!$callbackUrl){
+            return $this->error('Callback URL not found');
+        }
+
+        $event = $request->get('event');
+        if(!$event){
+            return $this->error('Event not found');
+        }
+
+        try{
+            $listener = new EventListener();
+            $listener->setCallbackUrl($callbackUrl);
+            $listener->setEvent($event);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($listener);
+            $em->flush();
+        }
+        catch(\Exception $e){
+            return $this->error($e->getMessage(), $e->getTraceAsString());
+        }
+
+        return $this->response($listener->getId());
+    }
+
+    /**
+     * Удаление слушателя события хранилища
+     *
+     * @Route("/remove-event-listener")
+     * @Template()
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function removeEventListenerAction(Request $request)
+    {
+        $id = intval($request->get('id'));
+        if(!$id){
+            return $this->error('Listener ID not found');
+        }
+
+        $event = $this->getDoctrine()
+            ->getRepository('StorageBundle:EventListener')
+            ->find($id);
+
+        if(!$event){
+            return $this->error('Listener not found');
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($event);
+        $em->flush();
+
+        return $this->response(null);
     }
 }
