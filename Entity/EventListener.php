@@ -3,6 +3,7 @@
 namespace ITM\StorageBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use ITM\StorageBundle\Event\DocumentEvents;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -12,10 +13,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class EventListener
 {
-    const EVENT_ADD_DOCUMENT = 1;
-
+    // События хранилища, на которые можно подписаться из API
     protected static $events = [
-        self::EVENT_ADD_DOCUMENT,
+        1 => DocumentEvents::ADD_DOCUMENT,
     ];
 
     /**
@@ -82,10 +82,11 @@ class EventListener
      *
      * @param integer $event
      * @return EventListener
+     * @throws \Exception
      */
     public function setEvent($event)
     {
-        if(!in_array($event, self::$events)){
+        if(!in_array($event, array_keys(self::$events))){
             throw new \Exception('Undefined event passed');
         }
         $this->event = $event;

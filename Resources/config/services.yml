@@ -8,3 +8,4 @@ services:
             - @knp_gaufrette.filesystem_map
             - @doctrine
             - %itm.storage.filesystem_name%
+            - @event_dispatcher

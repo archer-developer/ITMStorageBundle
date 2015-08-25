@@ -5,19 +5,35 @@ namespace ITM\StorageBundle\Util;
 use Doctrine\Bundle\DoctrineBundle\Registry;;
 use ITM\StorageBundle\Entity\Document;
 use ITM\StorageBundle\Entity\EventListener;
+use ITM\StorageBundle\Event\AddDocumentEvent;
+use ITM\StorageBundle\Event\DeleteDocumentEvent;
+use ITM\StorageBundle\Event\DocumentEvents;
 use Knp\Bundle\GaufretteBundle\FilesystemMap;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class StorageManipulator
 {
     protected $filesystem; // Gaufrette filesystem
     protected $doctrine; // Doctrine registry
     protected $filesystem_name;
+    protected $event_dispatcher;
 
-    public function __construct(FilesystemMap $filesystemMap, Registry $doctrine, $filesystem_name)
-    {
+    /**
+     * @param FilesystemMap $filesystemMap
+     * @param Registry $doctrine
+     * @param $filesystem_name
+     * @param EventDispatcherInterface $event_dispatcher
+     */
+    public function __construct(
+        FilesystemMap $filesystemMap,
+        Registry $doctrine,
+        $filesystem_name,
+        EventDispatcherInterface $event_dispatcher
+    ){
         $this->filesystem_name = $filesystem_name;
         $this->filesystem = $filesystemMap->get($this->filesystem_name);
         $this->doctrine = $doctrine;
+        $this->event_dispatcher = $event_dispatcher;
     }
 
     /**
@@ -63,6 +79,10 @@ class StorageManipulator
         $em->flush();
 
         $con->commit();
+
+        // Генерируем событие системы
+        $event = new AddDocumentEvent($document);
+        $this->event_dispatcher->dispatch(DocumentEvents::ADD_DOCUMENT, $event);
 
         return $document;
     }
@@ -159,6 +179,10 @@ class StorageManipulator
         $em->flush();
 
         $this->filesystem->delete($path);
+
+        // Генерируем событие системы
+        $event = new DeleteDocumentEvent($document);
+        $this->event_dispatcher->dispatch(DocumentEvents::DELETE_DOCUMENT, $event);
     }
 
     /**
