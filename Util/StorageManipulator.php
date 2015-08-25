@@ -4,6 +4,7 @@ namespace ITM\StorageBundle\Util;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;;
 use ITM\StorageBundle\Entity\Document;
+use ITM\StorageBundle\Entity\EventListener;
 use Knp\Bundle\GaufretteBundle\FilesystemMap;
 
 class StorageManipulator
@@ -30,7 +31,7 @@ class StorageManipulator
      */
     public function store($file_path, $attributes = '', $name = null)
     {
-        if (!file_exists($file_path)){
+        if (!file_exists($file_path)) {
             throw new \Exception('File not found: ' . $file_path);
         }
 
@@ -87,7 +88,7 @@ class StorageManipulator
     public function getContent($id)
     {
         $document = $this->get($id);
-        if (!$document){
+        if (!$document) {
             throw new \Exception('Document not found');
         }
 
@@ -106,7 +107,7 @@ class StorageManipulator
     public function getMimeType($id)
     {
         $document = $this->get($id);
-        if (!$document){
+        if (!$document) {
             throw new \Exception('Document not found');
         }
 
@@ -123,7 +124,7 @@ class StorageManipulator
     public function getSize($id)
     {
         $document = $this->get($id);
-        if (!$document){
+        if (!$document) {
             throw new \Exception('Document not found');
         }
 
@@ -142,7 +143,7 @@ class StorageManipulator
         $em = $this->doctrine->getManager();
 
         $document = $this->get($id);
-        if (!$document){
+        if (!$document) {
             throw new \Exception('Document not found');
         }
 
@@ -158,6 +159,24 @@ class StorageManipulator
         $em->flush();
 
         $this->filesystem->delete($path);
+    }
+
+    /**
+     * Add event listener
+     *
+     * @param $callbackUrl - subscriber's url
+     * @param $event - event code
+     */
+    public function addEventListener($callbackUrl, $event)
+    {
+        $eventListener = new EventListener();
+        $eventListener
+            ->setCallbackUrl($callbackUrl)
+            ->setEvent($event);
+
+        $em = $this->doctrine->getManager();
+        $em->persist($eventListener);
+        $em->flush();
     }
 
     /**

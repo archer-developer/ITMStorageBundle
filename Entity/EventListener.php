@@ -3,6 +3,7 @@
 namespace ITM\StorageBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -10,6 +11,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class EventListener
 {
+    const EVENT_ADD_DOCUMENT = 1;
+
+    protected static $events = [
+        self::EVENT_ADD_DOCUMENT
+    ];
+
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
@@ -19,6 +26,7 @@ class EventListener
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Url()
      */
     protected $callbackUrl;
 
