@@ -3,9 +3,18 @@ parameters:
 
 services:
     itm.storage:
-        class:      ITM\StorageBundle\Util\StorageManipulator
+        class: ITM\StorageBundle\Util\StorageManipulator
         arguments:
             - @knp_gaufrette.filesystem_map
             - @doctrine
             - %itm.storage.filesystem_name%
             - @event_dispatcher
+
+    itm.storage.api_key_user_provider:
+        class: ITM\StorageBundle\Security\APIKeyUserProvider
+        arguments:
+            - @doctrine
+
+    itm.storage.api_key_authenticator:
+        class:  ITM\StorageBundle\Security\APIKeyAuthenticator
+        public: false

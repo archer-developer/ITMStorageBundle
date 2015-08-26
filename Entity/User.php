@@ -41,6 +41,11 @@ class User
         $this->features = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return $this->getToken();
+    }
+
     /**
      * Get id
      *

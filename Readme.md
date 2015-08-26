@@ -54,14 +54,38 @@ Then specify filesystem name for ITMStorageBundle:
 	    # Gaufrette filesystem name
 	    filesystem: itm
 
-Finally add routing configuration:
+Finally add routing and security configuration (for JSON API):
 
 	# app/config/routing.yml
+	
+	// ...
 	
 	storage:
 	    resource: "@StorageBundle/Controller/"
 	    type:     annotation
 	    prefix:   itm-storage 
+
+    # app/config/security.yml
+    
+    providers:
+		// ...
+		# Custom user provider for search user by "api_key" parameter in query string
+		itm_storage_user_provider:
+			id: itm.storage.api_key_user_provider
+	
+		// ...
+    
+	firewalls:
+	    // ...
+	    # Firewall for storage JSON API 
+		itm_storage:
+			pattern: ^/itm-storage
+			stateless: true
+			simple_preauth:
+				authenticator: itm.storage.api_key_authenticator
+			provider: itm_storage_user_provider
+        
+        // ...
 
 Next update your doctrine schema
 
