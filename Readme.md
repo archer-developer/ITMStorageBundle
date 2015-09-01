@@ -115,21 +115,52 @@ Get document info by id:
 
 	itm:storage:document-info <id>
 
-Copy file info specified path:
+Copy file to local path:
 
-	itm:storage:document-get <id> <path>
+	itm:storage:document-get <id> <target-dir>
 
-### Web API
+### JSON API methods
+
+Document object:
+
+    {
+        'id': int,
+		'name': string,
+		'attributes': string,
+		'created_at': timestamp,
+    }
 
 Store files:
 
-	/itm-storage/api/store
+	URL: /itm-storage/api/store
+	Request: Array of files for store with any names
+	Response: Document
 
 Get document info:
 
-	/itm-storage/api/load
+	URL: /itm-storage/api/load
+	Request: id: int - Document id
+	Response: Document
 
 Download file:
 
-	/itm-storage/api/get-content
+	URL: /itm-storage/api/get-content
+	Request: id: int - Document id
+	Response: File content for downloading
+	
+Register remote event listener:
+ 
+    URL: /itm-storage/api/add-event-listener
+    Request: 
+        - callback_url: string
+        - event: int
+    Response: Event id
+    Events:
+        - 1: Add new document
+    
+Remove remote event listener:    
 
+    URL: /itm-storage/api/remove-event-listener
+    Request: id: int - Event id
+    Response: null
+    
