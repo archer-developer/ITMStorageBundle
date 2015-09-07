@@ -8,6 +8,7 @@ use ITM\StorageBundle\Entity\EventListener;
 use ITM\StorageBundle\Event\AddDocumentEvent;
 use ITM\StorageBundle\Event\DeleteDocumentEvent;
 use ITM\StorageBundle\Event\DocumentEvents;
+use ITM\StorageBundle\Event\RestoreDocumentEvent;
 use Knp\Bundle\GaufretteBundle\FilesystemMap;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -103,7 +104,7 @@ class StorageManipulator
      *
      * @param $id
      * @throws \Exception
-     * @return sting|null
+     * @return string|null
      */
     public function getContent($id)
     {
@@ -122,7 +123,7 @@ class StorageManipulator
      *
      * @param $id
      * @throws \Exception
-     * @return sting|null
+     * @return srting|null
      */
     public function getMimeType($id)
     {
@@ -139,7 +140,7 @@ class StorageManipulator
      *
      * @param $id
      * @throws \Exception
-     * @return sting|null
+     * @return string|null
      */
     public function getSize($id)
     {
@@ -156,6 +157,7 @@ class StorageManipulator
      *
      * @param $id
      * @param bool|false $softDelete
+     * @return Document
      * @throws \Exception
      */
     public function delete($id, $softDelete = true)
@@ -183,6 +185,34 @@ class StorageManipulator
         // Генерируем событие системы
         $event = new DeleteDocumentEvent($document);
         $this->event_dispatcher->dispatch(DocumentEvents::DELETE_DOCUMENT, $event);
+
+        return $document;
+    }
+
+    /**
+     * Restore document
+     *
+     * @param $id
+     * @return Document|null
+     * @throws \Exception
+     */
+    public function restore($id)
+    {
+        $document = $this->get($id);
+        if (!$document) {
+            throw new \Exception('Document not found');
+        }
+
+        $em = $this->doctrine->getManager();
+        $document->setDeletedAt(null);
+        $em->persist($document);
+        $em->flush();
+
+        // Генерируем событие системы
+        $event = new RestoreDocumentEvent($document);
+        $this->event_dispatcher->dispatch(DocumentEvents::RESTORE_DOCUMENT, $event);
+
+        return $document;
     }
 
     /**

@@ -7,31 +7,27 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 
-class DocumentStoreCommand extends ContainerAwareCommand
+class DocumentRestoreCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
         $this
-            ->setName('itm:storage:document-store')
-            ->setDescription('Store file with attributes in the storage')
+            ->setName('itm:storage:document-restore')
+            ->setDescription('Restore deleted document')
             ->addArgument(
-                'filepath',
+                'id',
                 InputArgument::REQUIRED,
-                'Path to file'
-            )
-            ->addArgument(
-                'attributes',
-                InputArgument::OPTIONAL,
-                'JSON string'
+                'Document id'
             );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
+            $id = $input->getArgument('id');
             $storage = $this->getContainer()->get('itm.storage');
-            $document = $storage->store($input->getArgument('filepath'), $input->getArgument('attributes'));
-            $output->writeln('Document #' . $document->getId() . ' created');
+            $storage->restore($id);
+            $output->writeln('Document #' . $id . ' restored');
         } catch (\Exception $e) {
             $output->writeln($e->getMessage());
         }

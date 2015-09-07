@@ -18,4 +18,5 @@ final class DocumentEvents
 {
     const ADD_DOCUMENT = 'itm.storage.document.add';
     const DELETE_DOCUMENT = 'itm.storage.document.delete';
+    const RESTORE_DOCUMENT = 'itm.storage.document.restore';
 }

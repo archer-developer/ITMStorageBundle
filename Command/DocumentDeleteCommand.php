@@ -4,34 +4,38 @@ namespace ITM\StorageBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 
-class DocumentStoreCommand extends ContainerAwareCommand
+class DocumentDeleteCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
         $this
-            ->setName('itm:storage:document-store')
-            ->setDescription('Store file with attributes in the storage')
+            ->setName('itm:storage:document-delete')
+            ->setDescription('Delete document from the storage')
             ->addArgument(
-                'filepath',
+                'id',
                 InputArgument::REQUIRED,
-                'Path to file'
+                'Document id'
             )
-            ->addArgument(
-                'attributes',
-                InputArgument::OPTIONAL,
-                'JSON string'
+            ->addOption(
+                'force',
+                'f',
+                InputOption::VALUE_NONE,
+                'Permanent delete'
             );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
+            $id = $input->getArgument('id');
+            $force = $input->getOption('force');
             $storage = $this->getContainer()->get('itm.storage');
-            $document = $storage->store($input->getArgument('filepath'), $input->getArgument('attributes'));
-            $output->writeln('Document #' . $document->getId() . ' created');
+            $storage->delete($id, !$force);
+            $output->writeln('Document #' . $id . ' deleted' . ($force ? ' permanently' : ''));
         } catch (\Exception $e) {
             $output->writeln($e->getMessage());
         }
