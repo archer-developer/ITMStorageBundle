@@ -52,7 +52,17 @@ class EventWorker implements GearmanOutputAwareInterface
         $params = json_decode($job->workload());
         $this->output->writeLn('Sending callback to ' . $params->URL);
 
-        
+        $curl = curl_init();
+
+        curl_setopt($curl, CURLOPT_URL, $params->URL);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($params->event));
+        $out = curl_exec($curl);
+
+        $this->output->writeLn('Response: ' . $out);
+
+        curl_close($curl);
 
         return true;
     }

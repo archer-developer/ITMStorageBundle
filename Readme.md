@@ -94,7 +94,10 @@ Finally add routing and security configuration (for JSON API):
         
         // ...
 
-Next update your doctrine schema
+Next update your doctrine schema and run Gearman worker:
+
+    php app/console doctrine:schema:update --force
+    nohup php app/console gearman:worker:execute ITMStorageBundleWorkersEventWorker -n &
 
 ## Usage
 
@@ -170,4 +173,3 @@ Remove remote event listener:
     URL: /itm-storage/api/remove-event-listener
     Request: id: int - Event id
     Response: null
-    
