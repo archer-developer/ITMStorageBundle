@@ -18,3 +18,10 @@ services:
     itm.storage.api_key_authenticator:
         class:  ITM\StorageBundle\Security\APIKeyAuthenticator
         public: false
+
+    itm.storage.callback_subscriber:
+        class: ITM\StorageBundle\Event\CallbackSubscriber
+        calls:
+            - [ setContainer, [ @service_container ] ]
+        tags:
+            - { name: kernel.event_subscriber }

@@ -49,7 +49,10 @@ class EventWorker implements GearmanOutputAwareInterface
      */
     public function remoteCallback(\GearmanJob $job)
     {
-        $this->output->writeLn('Job testA done!');
+        $params = json_decode($job->workload());
+        $this->output->writeLn('Sending callback to ' . $params->URL);
+
+        
 
         return true;
     }

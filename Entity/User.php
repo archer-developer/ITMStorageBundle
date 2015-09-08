@@ -8,7 +8,7 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
  * @ORM\Entity(repositoryClass="ITM\StorageBundle\Entity\Repository\UserRepository")
- * @ORM\Table(name="user")
+ * @ORM\Table(name="itm_storage_user")
  */
 class User
 {
