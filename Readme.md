@@ -24,6 +24,8 @@ This bundle can be installed using [composer](https://getcomposer.org/):
             new ITM\StorageBundle\StorageBundle(),
             new Knp\Bundle\GaufretteBundle\KnpGaufretteBundle(),
             new Knp\DoctrineBehaviors\Bundle\DoctrineBehaviorsBundle(),
+            new Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle(),
+            new Mmoreram\GearmanBundle\GearmanBundle(),
         );
     
     	// ...
@@ -34,6 +36,11 @@ This bundle can be installed using [composer](https://getcomposer.org/):
 First configure Gaufrette adapter and filesystem ([Gaufrette configuration](https://github.com/KnpLabs/KnpGaufretteBundle#configuration)). For example:
 
 	# app/config/config.yml	
+	
+	imports:
+        // ...
+        - { resource: @StorageBundle/Resources/config/gearman.yml }
+	// ...
 	
 	# Gaufrette Configuration
 	knp_gaufrette:
