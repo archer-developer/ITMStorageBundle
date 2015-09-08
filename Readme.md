@@ -94,10 +94,15 @@ Finally add routing and security configuration (for JSON API):
         
         // ...
 
-Next update your doctrine schema and run Gearman worker:
+Next update your doctrine schema:
 
     php app/console doctrine:schema:update --force
+    
+And run Gearman worker on background:
+    
     nohup php app/console gearman:worker:execute ITMStorageBundleWorkersEventWorker -n &
+
+You can use Supervisord ([See documentation](https://github.com/supervisor/supervisor)) for start and reload Gearman worker.
 
 ## Usage
 
@@ -167,6 +172,7 @@ Register remote event listener:
     Response: Event id
     Events:
         - 1: Add new document
+        - 2: Remove document
     
 Remove remote event listener:    
 
