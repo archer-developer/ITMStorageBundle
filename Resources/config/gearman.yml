@@ -19,9 +19,8 @@ gearman:
 
          # If any include is defined, Only these namespaces will be parsed
          # Otherwise, full Bundle will be parsed
-         #include:
-         #   - Services
-         #   - EventListener
+         include:
+            - Workers
 
          # Namespaces this Bundle will ignore when parsing
          #ignore:
