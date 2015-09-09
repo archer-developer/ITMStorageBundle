@@ -4,7 +4,6 @@ namespace ITM\StorageBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use ITM\StorageBundle\Event\DocumentEvents;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
