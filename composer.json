@@ -21,10 +21,11 @@
     ],
     "require": {
         "php": ">=5.3.2",
+        "ext-curl": "*",
         "symfony/symfony": ">=2.1",
         "knplabs/knp-gaufrette-bundle": "*@dev",
         "knplabs/doctrine-behaviors": "~1.1",
-        "mmoreram/gearman-bundle": "dev-master"
+        "mmoreram/gearman-bundle": "*@dev"
     },
     "suggest": {
 

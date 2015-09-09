@@ -19,11 +19,9 @@ services:
         class:  ITM\StorageBundle\Security\APIKeyAuthenticator
         public: false
 
-    itm.storage.event_listener.document:
-        class: ITM\StorageBundle\EventListener\DocumentEventListener
-        arguments:
-            - @gearman
+    itm.storage.callback_subscriber:
+        class: ITM\StorageBundle\Event\CallbackSubscriber
+        calls:
+            - [ setContainer, [ @service_container ] ]
         tags:
-            - {name: kernel.event_listener, event: itm.storage.document.add, method: onDocumentAdd}
-            - {name: kernel.event_listener, event: itm.storage.document.delete, method: onDocumentDelete}
-            - {name: kernel.event_listener, event: itm.storage.document.restore, method: onDocumentRestore}
+            - { name: kernel.event_subscriber }

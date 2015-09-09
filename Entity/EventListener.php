@@ -9,13 +9,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="event_listener")
+ * @ORM\Table(name="itm_storage_event_listener")
  */
 class EventListener
 {
     // События хранилища, на которые можно подписаться из API
     protected static $events = [
         1 => DocumentEvents::ADD_DOCUMENT,
+        2 => DocumentEvents::DELETE_DOCUMENT,
     ];
 
     /**
@@ -102,5 +103,10 @@ class EventListener
     public function getEvent()
     {
         return $this->event;
+    }
+
+    public static function getEventCode($event_name)
+    {
+        return array_search($event_name, self::$events);
     }
 }

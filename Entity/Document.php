@@ -7,7 +7,7 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="document")
+ * @ORM\Table(name="itm_storage_document")
  */
 class Document implements \JsonSerializable
 {

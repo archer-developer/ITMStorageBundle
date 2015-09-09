@@ -24,6 +24,8 @@ This bundle can be installed using [composer](https://getcomposer.org/):
             new ITM\StorageBundle\StorageBundle(),
             new Knp\Bundle\GaufretteBundle\KnpGaufretteBundle(),
             new Knp\DoctrineBehaviors\Bundle\DoctrineBehaviorsBundle(),
+            new Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle(),
+            new Mmoreram\GearmanBundle\GearmanBundle(),
         );
     
     	// ...
@@ -34,6 +36,11 @@ This bundle can be installed using [composer](https://getcomposer.org/):
 First configure Gaufrette adapter and filesystem ([Gaufrette configuration](https://github.com/KnpLabs/KnpGaufretteBundle#configuration)). For example:
 
 	# app/config/config.yml	
+	
+	imports:
+        // ...
+        - { resource: @StorageBundle/Resources/config/gearman.yml }
+	// ...
 	
 	# Gaufrette Configuration
 	knp_gaufrette:
@@ -87,7 +94,15 @@ Finally add routing and security configuration (for JSON API):
         
         // ...
 
-Next update your doctrine schema
+Next update your doctrine schema:
+
+    php app/console doctrine:schema:update --force
+    
+And run Gearman worker on background:
+    
+    nohup php app/console gearman:worker:execute ITMStorageBundleWorkersEventWorker -n &
+
+You can use Supervisord ([See documentation](https://github.com/supervisor/supervisor)) for start and reload Gearman worker.
 
 ## Usage
 
@@ -157,10 +172,10 @@ Register remote event listener:
     Response: Event id
     Events:
         - 1: Add new document
+        - 2: Remove document
     
 Remove remote event listener:    
 
     URL: /itm-storage/api/remove-event-listener
     Request: id: int - Event id
     Response: null
-    
