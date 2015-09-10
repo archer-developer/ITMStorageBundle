@@ -26,7 +26,6 @@ class UserCreateCommand extends ContainerAwareCommand
         $em->persist($user);
         $em->flush();
 
-        $output->writeln('User token:');
-        $output->writeln($token);
+        $output->writeln('User token: ' . $token);
     }
 }
