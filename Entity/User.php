@@ -38,7 +38,7 @@ class User
 
     public function __construct()
     {
-        $this->features = new ArrayCollection();
+        $this->documents = new ArrayCollection();
     }
 
     public function __toString()
