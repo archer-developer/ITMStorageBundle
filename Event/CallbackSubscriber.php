@@ -30,7 +30,7 @@ class CallbackSubscriber implements EventSubscriberInterface, ContainerAwareInte
         return array(
             DocumentEvents::ADD_DOCUMENT => array('onAddDocument', 0),
             DocumentEvents::DELETE_DOCUMENT => array('onDeleteDocument', 0),
-            DocumentEvents::DELETE_DOCUMENT => array('onRestoreDocument', 0),
+            DocumentEvents::RESTORE_DOCUMENT => array('onRestoreDocument', 0),
         );
     }
 
