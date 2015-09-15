@@ -11,7 +11,7 @@ use Symfony\Component\EventDispatcher\Event;
  * Date: 25.8.15
  * Time: 23.05
  */
-class AddDocumentEvent extends Event
+class AddDocumentEvent extends Event implements \JsonSerializable
 {
     protected $document;
 
@@ -23,5 +23,13 @@ class AddDocumentEvent extends Event
     public function getDocument()
     {
         return $this->document;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'remote_event' => DocumentEvents::REMOTE_ADD_DOCUMENT,
+            'document_id' => $this->getDocument()->getId(),
+        ];
     }
 }

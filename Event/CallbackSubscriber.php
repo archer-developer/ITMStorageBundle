@@ -30,6 +30,7 @@ class CallbackSubscriber implements EventSubscriberInterface, ContainerAwareInte
         return array(
             DocumentEvents::ADD_DOCUMENT => array('onAddDocument', 0),
             DocumentEvents::DELETE_DOCUMENT => array('onDeleteDocument', 0),
+            DocumentEvents::DELETE_DOCUMENT => array('onRestoreDocument', 0),
         );
     }
 
@@ -56,6 +57,20 @@ class CallbackSubscriber implements EventSubscriberInterface, ContainerAwareInte
     {
         $this->doIt(
             EventListener::getEventCode(DocumentEvents::DELETE_DOCUMENT),
+            'ITMStorageBundleWorkersEventWorker~remoteCallback',
+            $event
+        );
+    }
+
+    /**
+     * Отправляем событие восстанавления документа в очередь
+     *
+     * @param RestoreDocumentEvent $event
+     */
+    public function onRestoreDocument(RestoreDocumentEvent $event)
+    {
+        $this->doIt(
+            EventListener::getEventCode(DocumentEvents::RESTORE_DOCUMENT),
             'ITMStorageBundleWorkersEventWorker~remoteCallback',
             $event
         );

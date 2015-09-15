@@ -30,7 +30,7 @@ class APIController extends Controller
     /**
      * Приветствие
      *
-     * @Route("/")
+     * @Route("/", name="ITMStorageAPIHello")
      * @Template()
      * @return JsonResponse
      */
@@ -42,7 +42,7 @@ class APIController extends Controller
     /**
      * Сохранение файла или массива файлов в хранилище
      *
-     * @Route("/store")
+     * @Route("/store", name="ITMStorageAPIStore")
      * @Template()
      * @param Request $request
      * @return JsonResponse - объект созданного документа
@@ -89,7 +89,7 @@ class APIController extends Controller
     /**
      * Получение объекта документа из хранилища
      *
-     * @Route("/load")
+     * @Route("/load", name="ITMStorageAPILoad")
      * @Template()
      * @param Request $request
      * @return JsonResponse
@@ -115,7 +115,7 @@ class APIController extends Controller
     /**
      * Скачивание файла
      *
-     * @Route("/get-content")
+     * @Route("/get-content", name="ITMStorageAPIGetContentListener")
      * @Template()
      * @param Request $request
      * @return Response
@@ -188,7 +188,7 @@ class APIController extends Controller
     /**
      * Удаление слушателя события хранилища
      *
-     * @Route("/remove-event-listener")
+     * @Route("/remove-event-listener", name="ITMStorageAPIRemoveEventListener")
      * @Template()
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\JsonResponse

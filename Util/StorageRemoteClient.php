@@ -56,6 +56,19 @@ class StorageRemoteClient
     }
 
     /**
+     * @param $listener_id - remote event listener id
+     * @return StdClass
+     */
+    public function removeEventListener($listener_id)
+    {
+        $params = [
+            'id' => $listener_id,
+        ];
+
+        return $this->send('ITMStorageAPIRemoveEventListener', $params);
+    }
+
+    /**
      * @param $route_name
      * @param $params
      * @return StdClass

@@ -10,7 +10,7 @@ namespace ITM\StorageBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 
-class DeleteDocumentEvent extends Event
+class DeleteDocumentEvent extends Event implements \JsonSerializable
 {
     protected $document;
 
@@ -22,5 +22,13 @@ class DeleteDocumentEvent extends Event
     public function getDocument()
     {
         return $this->document;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'remote_event' => DocumentEvents::REMOTE_DELETE_DOCUMENT,
+            'document_id' => $this->getDocument()->getId(),
+        ];
     }
 }
