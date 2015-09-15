@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 class ClientController extends Controller
 {
     /**
-     * Получение события
+     * Получение удаленного события
      *
      * @Route("/accept-event", name="ITMStorageClientAcceptEvent")
      */
@@ -31,9 +31,7 @@ class ClientController extends Controller
     {
         $event = json_decode($request->get('event'));
 
-        $remote_event = new GenericEvent();
-        $remote_event->setArgument('document_id', $event->document_id);
-
+        $remote_event = new DocumentRemoteEvent($event->document_id);
         $this->container->get('event_dispatcher')->dispatch($event->remote_event, $remote_event);
 
         return new Response();

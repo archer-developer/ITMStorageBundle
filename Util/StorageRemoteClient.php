@@ -10,6 +10,7 @@ namespace ITM\StorageBundle\Util;
 
 
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Router;
 
 /**
@@ -164,13 +165,19 @@ class StorageRemoteClient
     protected function send($route_name, $params)
     {
         $params['api_key'] = $this->server_api_key;
+        $url = $this->server_address . $this->router->generate($route_name);
 
-        curl_setopt($this->curl, CURLOPT_URL, $this->server_address . $this->router->generate($route_name));
+        curl_setopt($this->curl, CURLOPT_URL, $url);
         curl_setopt($this->curl, CURLOPT_POSTFIELDS, $params);
         $response = curl_exec($this->curl);
 
         $header_size = curl_getinfo($this->curl, CURLINFO_HEADER_SIZE);
         $content_type = curl_getinfo($this->curl, CURLINFO_CONTENT_TYPE);
+        $http_code = curl_getinfo($this->curl, CURLINFO_HTTP_CODE);
+
+        if($http_code != 200){
+            throw new HttpException($http_code, 'Request error: ' . $url);
+        }
 
         $response = substr($response, $header_size);
 

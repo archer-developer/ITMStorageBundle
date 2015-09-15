@@ -12,13 +12,15 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class EventListener
 {
-    const ADD_DOCUMENT    = 1;
-    const DELETE_DOCUMENT = 2;
+    const ADD_DOCUMENT     = 1;
+    const DELETE_DOCUMENT  = 2;
+    const RESTORE_DOCUMENT = 3;
 
     // События хранилища, на которые можно подписаться из API
     protected static $events = [
-        self::ADD_DOCUMENT => DocumentEvents::ADD_DOCUMENT,
-        self::DELETE_DOCUMENT => DocumentEvents::DELETE_DOCUMENT,
+        self::ADD_DOCUMENT     => DocumentEvents::ADD_DOCUMENT,
+        self::DELETE_DOCUMENT  => DocumentEvents::DELETE_DOCUMENT,
+        self::RESTORE_DOCUMENT => DocumentEvents::RESTORE_DOCUMENT,
     ];
 
     /**

@@ -8,7 +8,7 @@ This Symfony bundle is provides easy API to save files with attributes into stor
 
 This bundle can be installed using [composer](https://getcomposer.org/):
 
-	php composer.phar require http://stash.itmclient.com/scm/sb/itmextensionsbundle.git
+	php composer.phar require http://stash.itmclient.com/scm/sb/itmstoragebundle.git
 	
 ### Register the bundle
 
@@ -60,10 +60,13 @@ Then specify filesystem name for ITMStorageBundle:
 	storage:
 	    # Gaufrette filesystem name
 	    filesystem: itm
+	    
 	    # Remote storage server address
 		server_address: 127.0.0.1:8001
+		
 		# Token for client authorization. Use UserCreate command for generate user token
         server_api_key: $2y$10$zDaFxjAgRt.QfJUucEolg.rOC8Cipwz9ECoJPVeJcHAel7ewQ9HwG
+		
 		# Remote storage server address
 		client_address: 127.0.0.1:8000
 
@@ -134,11 +137,39 @@ Store file with attributes in the storage:
 
 Get document info by id:
 
-	itm:storage:document-info <id>
+	php app/console itm:storage:document-info <id>
 
 Copy file to local path:
 
-	itm:storage:document-get <id> <target-dir>
+	php app/console itm:storage:document-get <id> <target-dir>
+	
+Register remote listeners (the storage bundle is using as client):
+
+    php app/console itm:storage:client-subscribe
+
+### Connecting listeners
+
+Subscribe to local events:
+  
+    $dispatcher->addListener(DocumentEvents::ADD_DOCUMENT, function (AddDocumentEvent $event) {
+        $document = $event->getDocument();
+        // ... do process document
+    });
+    $dispatcher->addListener(DocumentEvents::DELETE_DOCUMENT, function (DeleteDocumentEvent $event) {});
+    $dispatcher->addListener(DocumentEvents::RESTORE_DOCUMENT, function (RestoreDocumentEvent $event) {});
+    
+Subscribe to remote events:
+    
+    $dispatcher->addListener(DocumentEvents::REMOTE_ADD_DOCUMENT, function (RemoteDocumentEvent $event) {
+		// Read storage document id
+		$document_id = $event->getDocumentId();
+		// Load document
+		$client = $container->get('itm.storage.remote_client')->load($document_id);
+		// ... do process document
+	});
+	$dispatcher->addListener(DocumentEvents::REMOTE_DELETE_DOCUMENT, function (RemoteDocumentEvent $event) {});
+	$dispatcher->addListener(DocumentEvents::REMOTE_RESTORE_DOCUMENT, function (RemoteDocumentEvent $event) {});
+	
 
 ### JSON API methods
 
