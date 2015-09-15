@@ -8,6 +8,8 @@ use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
+ * Воркер для выполнения удаленных вызовов событий
+ *
  * @Gearman\Work(
  *     name = "EventWorker",
  *     description = "Send remote notifications",

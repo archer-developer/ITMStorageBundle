@@ -13,6 +13,12 @@ use Knp\Bundle\GaufretteBundle\FilesystemMap;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
+/**
+ * Сервис для выполнения операций над докуменртами локального хранилищем
+ *
+ * Class StorageManipulator
+ * @package ITM\StorageBundle\Util
+ */
 class StorageManipulator
 {
     protected $filesystem; // Gaufrette filesystem

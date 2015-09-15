@@ -12,6 +12,12 @@ namespace ITM\StorageBundle\Util;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\Routing\Router;
 
+/**
+ * Сервис для работы с удаленным хранилищем через JSON API
+ *
+ * Class StorageRemoteClient
+ * @package ITM\StorageBundle\Util
+ */
 class StorageRemoteClient
 {
     protected $server_address;
