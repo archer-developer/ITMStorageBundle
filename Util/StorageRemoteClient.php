@@ -9,6 +9,7 @@
 namespace ITM\StorageBundle\Util;
 
 
+use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\Routing\Router;
 
 class StorageRemoteClient
@@ -18,6 +19,7 @@ class StorageRemoteClient
     protected $client_address;
     protected $api_key;
     protected $router;
+    protected $curl;
 
     /**
      * @param Router $router
@@ -31,9 +33,22 @@ class StorageRemoteClient
         $this->server_api_key = $server_api_key;
         $this->client_address = $client_address;
         $this->router = $router;
+
+        $this->curl = curl_init();
+
+        curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($this->curl, CURLOPT_POST, true);
+        curl_setopt($this->curl, CURLOPT_HEADER, true);
+        curl_setopt($this->curl, CURLOPT_USERAGENT, "ITMStorageBundle JSON API Client");
+    }
+
+    public function __destruct()
+    {
+        curl_close($this->curl);
     }
 
     /**
+     * Смена токена пользователя для авторизации на сервере
      * @param $api_key
      */
     public function setAPIKey($api_key)
@@ -42,7 +57,72 @@ class StorageRemoteClient
     }
 
     /**
-     * @param $event - event code
+     * @see APIController
+     * @return StdClass
+     */
+    public function hello()
+    {
+        return $this->send('ITMStorageAPIHello', []);
+    }
+
+    /**
+     * Сохранение файла или массива файлов в хранилище
+     *
+     * @see APIController
+     * @param string|array $file_path
+     * @param mixed $attributes
+     * @return StdClass
+     * @throws FileNotFoundException
+     */
+    public function store($file_path, $attributes)
+    {
+        $params = [
+            'attributes' => json_encode($attributes),
+        ];
+
+        $files = (is_array($file_path)) ? $file_path : [$file_path];
+        $i = 0;
+        foreach($files as $file) {
+            if(!file_exists($file)){
+                throw new FileNotFoundException('File path: ' . $file);
+            }
+            $params['file'.($i++)] = curl_file_create($file);
+        }
+
+        return $this->send('ITMStorageAPIStore', $params);
+    }
+
+    /**
+     * @see APIController
+     * @param int $document_id - storage document id
+     * @return StdClass
+     */
+    public function load($document_id)
+    {
+        $params = [
+            'id' => $document_id,
+        ];
+
+        return $this->send('ITMStorageAPILoad', $params);
+    }
+
+    /**
+     * @see APIController
+     * @param int $document_id - storage document id
+     * @return string
+     */
+    public function getContent($document_id)
+    {
+        $params = [
+            'id' => $document_id,
+        ];
+
+        return $this->send('ITMStorageAPIGetContent', $params);
+    }
+
+    /**
+     * @see APIController
+     * @param int $event - event code
      * @return StdClass
      */
     public function addEventListener($event)
@@ -56,7 +136,8 @@ class StorageRemoteClient
     }
 
     /**
-     * @param $listener_id - remote event listener id
+     * @see APIController
+     * @param int $listener_id - remote event listener id
      * @return StdClass
      */
     public function removeEventListener($listener_id)
@@ -69,24 +150,24 @@ class StorageRemoteClient
     }
 
     /**
-     * @param $route_name
-     * @param $params
-     * @return StdClass
+     * @see APIController
+     * @param string $route_name
+     * @param array $params
+     * @return StdClass|string
      */
     protected function send($route_name, $params)
     {
         $params['api_key'] = $this->server_api_key;
 
-        $curl = curl_init();
+        curl_setopt($this->curl, CURLOPT_URL, $this->server_address . $this->router->generate($route_name));
+        curl_setopt($this->curl, CURLOPT_POSTFIELDS, $params);
+        $response = curl_exec($this->curl);
 
-        curl_setopt($curl, CURLOPT_URL, $this->server_address . $this->router->generate($route_name));
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $params);
-        $response = curl_exec($curl);
+        $header_size = curl_getinfo($this->curl, CURLINFO_HEADER_SIZE);
+        $content_type = curl_getinfo($this->curl, CURLINFO_CONTENT_TYPE);
 
-        curl_close($curl);
+        $response = substr($response, $header_size);
 
-        return json_decode($response);
+        return ($content_type == 'application/json') ? json_decode($response) : $response;
     }
 }

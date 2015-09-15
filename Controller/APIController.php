@@ -51,7 +51,7 @@ class APIController extends Controller
     {
         $files = $request->files;
         if(!$files->count()){
-            return $this->error('You must send file');
+            return $this->error('You must send a file');
         }
 
         $attributes = $request->get('attributes', null);
@@ -115,7 +115,7 @@ class APIController extends Controller
     /**
      * Скачивание файла
      *
-     * @Route("/get-content", name="ITMStorageAPIGetContentListener")
+     * @Route("/get-content", name="ITMStorageAPIGetContent")
      * @Template()
      * @param Request $request
      * @return Response
