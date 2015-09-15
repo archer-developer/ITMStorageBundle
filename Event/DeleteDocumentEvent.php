@@ -12,15 +12,15 @@ use Symfony\Component\EventDispatcher\Event;
 
 class DeleteDocumentEvent extends Event
 {
-    protected $document_id;
+    protected $document;
 
-    public function __construct($document_id)
+    public function __construct(Document $document)
     {
-        $this->document_id = $document_id;
+        $this->document = $document;
     }
 
-    public function getDocumentId()
+    public function getDocument()
     {
-        return $this->document_id;
+        return $this->document;
     }
 }

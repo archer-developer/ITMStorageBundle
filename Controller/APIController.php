@@ -152,7 +152,7 @@ class APIController extends Controller
     /**
      * Создание слушателя события хранилища
      *
-     * @Route("/add-event-listener")
+     * @Route("/add-event-listener", name="ITMStorageAPIAddEventListener")
      * @Template()
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\JsonResponse

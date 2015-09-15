@@ -60,6 +60,12 @@ Then specify filesystem name for ITMStorageBundle:
 	storage:
 	    # Gaufrette filesystem name
 	    filesystem: itm
+	    # Remote storage server address
+		server_address: 127.0.0.1:8001
+		# Token for client authorization. Use UserCreate command for generate user token
+        server_api_key: $2y$10$zDaFxjAgRt.QfJUucEolg.rOC8Cipwz9ECoJPVeJcHAel7ewQ9HwG
+		# Remote storage server address
+		client_address: 127.0.0.1:8000
 
 Finally add routing and security configuration (for JSON API):
 
@@ -148,7 +154,9 @@ Document object:
 Store files:
 
 	URL: /itm-storage/api/store
-	Request: Array of files for store with any names
+	Request: 
+	    - Array of files for store with any names
+	    - attributes: string - JSON string
 	Response: Document
 
 Get document info:

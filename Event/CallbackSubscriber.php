@@ -80,11 +80,10 @@ class CallbackSubscriber implements EventSubscriberInterface, ContainerAwareInte
             ]);
 
         foreach($listeners as $listener){
-            $r = $gearman->doBackgroundJob($job_name, json_encode([
+            $gearman->doBackgroundJob($job_name, json_encode([
                 'URL' => $listener->getCallbackUrl(),
                 'event' => $event,
             ]));
-            var_dump($r);
         }
     }
 

@@ -29,6 +29,15 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('filesystem')
                     ->isRequired()
                 ->end()
+                ->scalarNode('server_address')
+                    ->isRequired()
+                ->end()
+                ->scalarNode('server_api_key')
+                    ->isRequired()
+                ->end()
+                ->scalarNode('client_address')
+                    ->isRequired()
+                ->end()
             ->end();
 
         return $treeBuilder;

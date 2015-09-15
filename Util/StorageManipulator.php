@@ -10,6 +10,7 @@ use ITM\StorageBundle\Event\DeleteDocumentEvent;
 use ITM\StorageBundle\Event\DocumentEvents;
 use ITM\StorageBundle\Event\RestoreDocumentEvent;
 use Knp\Bundle\GaufretteBundle\FilesystemMap;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class StorageManipulator
@@ -213,24 +214,6 @@ class StorageManipulator
         $this->event_dispatcher->dispatch(DocumentEvents::RESTORE_DOCUMENT, $event);
 
         return $document;
-    }
-
-    /**
-     * Add event listener
-     *
-     * @param $callbackUrl - subscriber's url
-     * @param $event - event code
-     */
-    public function addEventListener($callbackUrl, $event)
-    {
-        $eventListener = new EventListener();
-        $eventListener
-            ->setCallbackUrl($callbackUrl)
-            ->setEvent($event);
-
-        $em = $this->doctrine->getManager();
-        $em->persist($eventListener);
-        $em->flush();
     }
 
     /**
