@@ -11,6 +11,7 @@ namespace ITM\StorageBundle\Command;
 use ITM\StorageBundle\Entity\EventListener;
 use ITM\StorageBundle\Util\JsonAPITrait;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -37,12 +38,20 @@ class ClientSubscribeCommand extends ContainerAwareCommand
         $table = new Table($output);
         $table->setHeaders(['Event', 'Status']);
 
+        $step = 10;
+        $bar = new ProgressBar($output, count(EventListener::getAvailableEvents()) * $step);
+        $bar->start();
+
         foreach(EventListener::getAvailableEvents() as $event_code => $event_name){
             $table->addRow([
                 EventListener::getAvailableEvents()[$event_code],
                 $this->connect($event_code),
             ]);
+            $bar->advance($step);
         }
+
+        $bar->finish();
+        $output->writeln('');
 
         $table->render();
     }
