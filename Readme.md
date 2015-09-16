@@ -95,7 +95,7 @@ Finally add routing and security configuration (for JSON API):
 	    // ...
 	    # Firewall for storage JSON API 
 		itm_storage:
-			pattern: ^/itm-storage
+			pattern: ^/itm-storage/api
 			stateless: true
 			simple_preauth:
 				authenticator: itm.storage.api_key_authenticator
