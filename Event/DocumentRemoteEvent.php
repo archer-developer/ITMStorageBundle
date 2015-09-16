@@ -9,7 +9,9 @@
 namespace ITM\StorageBundle\Event;
 
 
-class DocumentRemoteEvent
+use Symfony\Component\EventDispatcher\Event;
+
+class DocumentRemoteEvent extends Event
 {
     protected $document_id;
 

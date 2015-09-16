@@ -83,7 +83,7 @@ class CallbackSubscriber implements EventSubscriberInterface, ContainerAwareInte
      * @param string $job_name
      * @param Event $event
      */
-    protected function doIt($event_code, $job_name, $event)
+    protected function doIt($event_code, $job_name, Event $event)
     {
         $gearman = $this->container->get('gearman');
 

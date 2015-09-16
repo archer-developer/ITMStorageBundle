@@ -52,14 +52,14 @@ class EventWorker implements GearmanOutputAwareInterface
     public function remoteCallback(\GearmanJob $job)
     {
         $params = json_decode($job->workload());
-        $this->output->writeLn('Sending callback to ' . $params->URL);
+        $this->output->writeLn('Sending callback to ' . print_r($params, true));
 
         $curl = curl_init();
 
         curl_setopt($curl, CURLOPT_URL, $params->URL);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
         curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($params->event));
+        curl_setopt($curl, CURLOPT_POSTFIELDS, ['event' => json_encode($params->event)]);
         $out = curl_exec($curl);
 
         $this->output->writeLn('Response: ' . $out);

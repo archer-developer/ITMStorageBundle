@@ -10,9 +10,8 @@ namespace ITM\StorageBundle\Controller;
 
 
 use ITM\StorageBundle\Entity\EventListener;
+use ITM\StorageBundle\Event\DocumentRemoteEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\EventDispatcher\Event;
-use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
