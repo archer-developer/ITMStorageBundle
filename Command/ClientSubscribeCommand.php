@@ -34,24 +34,31 @@ class ClientSubscribeCommand extends ContainerAwareCommand
         $output->writeln('Connecting to remote storage server');
 
         $this->client = $this->getContainer()->get('itm.storage.remote_client');
+        $servers = $this->getContainer()->getParameter('itm.storage.servers');
 
         $table = new Table($output);
         $table->setHeaders(['Event', 'Status']);
 
         $step = 10;
-        $bar = new ProgressBar($output, count(EventListener::getAvailableEvents()) * $step);
-        $bar->start();
 
-        foreach(EventListener::getAvailableEvents() as $event_code => $event_name){
-            $table->addRow([
-                EventListener::getAvailableEvents()[$event_code],
-                $this->connect($event_code),
-            ]);
-            $bar->advance($step);
+        foreach($servers as $server){
+
+            $this->client->setAPIKey($server['api_key']);
+
+            $bar = new ProgressBar($output, count(EventListener::getAvailableEvents()) * $step);
+            $bar->start();
+
+            foreach(EventListener::getAvailableEvents() as $event_code => $event_name){
+                $table->addRow([
+                    EventListener::getAvailableEvents()[$event_code],
+                    $this->connect($event_code),
+                ]);
+                $bar->advance($step);
+            }
+
+            $bar->finish();
+            $output->writeln('');
         }
-
-        $bar->finish();
-        $output->writeln('');
 
         $table->render();
     }

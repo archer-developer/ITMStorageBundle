@@ -14,8 +14,7 @@ services:
         class: ITM\StorageBundle\Util\StorageRemoteClient
         arguments:
             - @router
-            - %itm.storage.server_address%
-            - %itm.storage.server_api_key%
+            - %itm.storage.servers%
             - %itm.storage.client_address%
 
     itm.storage.api_key_user_provider:

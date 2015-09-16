@@ -5,6 +5,7 @@ namespace ITM\StorageBundle\Util;
 use Doctrine\Bundle\DoctrineBundle\Registry;;
 use ITM\StorageBundle\Entity\Document;
 use ITM\StorageBundle\Entity\EventListener;
+use ITM\StorageBundle\Entity\User;
 use ITM\StorageBundle\Event\AddDocumentEvent;
 use ITM\StorageBundle\Event\DeleteDocumentEvent;
 use ITM\StorageBundle\Event\DocumentEvents;
@@ -53,7 +54,7 @@ class StorageManipulator
      * @return Document
      * @throws \Exception
      */
-    public function store($file_path, $attributes = '', $name = null)
+    public function store($file_path, User $user, $attributes = '', $name = null)
     {
         if (!file_exists($file_path)) {
             throw new \Exception('File not found: ' . $file_path);
@@ -66,6 +67,7 @@ class StorageManipulator
         // Create Document object
         $document = new Document();
         $document->setName((is_string($name)) ? $name : basename($file_path));
+        $document->setUser($user);
         $document->setAttributes($attributes);
         $em = $this->doctrine->getManager();
         $em->persist($document);

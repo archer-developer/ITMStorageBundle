@@ -21,23 +21,21 @@ use Symfony\Component\Routing\Router;
  */
 class StorageRemoteClient
 {
-    protected $server_address;
-    protected $server_api_key;
+    protected $servers;
     protected $client_address;
-    protected $api_key;
+    protected $server_api_key;
+    protected $server_address;
     protected $router;
     protected $curl;
 
     /**
      * @param Router $router
-     * @param $server_address
-     * @param $server_api_key
+     * @param $servers
      * @param $client_address
      */
-    public function __construct(Router $router, $server_address, $server_api_key, $client_address)
+    public function __construct(Router $router, $servers, $client_address)
     {
-        $this->server_address = $server_address;
-        $this->server_api_key = $server_api_key;
+        $this->servers = $servers;
         $this->client_address = $client_address;
         $this->router = $router;
 
@@ -56,11 +54,23 @@ class StorageRemoteClient
 
     /**
      * Смена токена пользователя для авторизации на сервере
+     *
      * @param $api_key
+     * @return bool
+     * @throws \Exception
      */
     public function setAPIKey($api_key)
     {
-        $this->server_api_key = $api_key;
+        foreach($this->servers as $server){
+            if($api_key == $server['api_key']){
+                $this->server_api_key = $api_key;
+                $this->server_address = $server['address'];
+
+                return true;
+            }
+        }
+
+        throw new \Exception('Invalid server API Key');
     }
 
     /**
@@ -161,9 +171,14 @@ class StorageRemoteClient
      * @param string $route_name
      * @param array $params
      * @return StdClass|string
+     * @throws \Exception
      */
     protected function send($route_name, $params)
     {
+        if(!$this->server_api_key){
+            throw new \Exception('Remote server not set! Use setAPIKey() method first.');
+        }
+
         $params['api_key'] = $this->server_api_key;
         $url = $this->server_address . $this->router->generate($route_name);
 

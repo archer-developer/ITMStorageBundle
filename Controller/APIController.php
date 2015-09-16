@@ -77,7 +77,7 @@ class APIController extends Controller
 
         $storage = $this->container->get('itm.storage');
         try{
-            $document = $storage->store($file_path, $attributes, $file_name);
+            $document = $storage->store($file_path, $this->getUser(), $attributes, $file_name);
             // Возвращаем JSON объекта документа для запрашивающей системы
             return $this->response($document);
         }

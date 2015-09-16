@@ -30,7 +30,7 @@ class ClientController extends Controller
     {
         $event = json_decode($request->get('event'));
 
-        $remote_event = new DocumentRemoteEvent($event->document_id);
+        $remote_event = new DocumentRemoteEvent($event->document_id, $event->api_key);
         $this->container->get('event_dispatcher')->dispatch($event->remote_event, $remote_event);
 
         return new Response();

@@ -29,6 +29,7 @@ class DeleteDocumentEvent extends Event implements \JsonSerializable
         return [
             'remote_event' => DocumentEvents::REMOTE_DELETE_DOCUMENT,
             'document_id' => $this->getDocument()->getId(),
+            'api_key' => $this->getDocument()->getUser()->getToken(),
         ];
     }
 }
