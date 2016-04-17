@@ -2,7 +2,7 @@
 
 This Symfony bundle is provides easy API to save files with attributes into storage (filesystem, cloud storages, ftp etc.). It requires [KnpGaufretteBundle](https://github.com/KnpLabs/KnpGaufretteBundle).
 
-## Instalation
+## Installation
 
 ### With composer
 
@@ -23,8 +23,11 @@ This bundle can be installed using [composer](https://getcomposer.org/):
         	// ...
             new Knp\Bundle\GaufretteBundle\KnpGaufretteBundle(),
             new Knp\DoctrineBehaviors\Bundle\DoctrineBehaviorsBundle(),
+
+            // If you will use remote client for storage (optional)
             new Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle(),
             new Mmoreram\GearmanBundle\GearmanBundle(),
+
             // ...
             new ITM\StorageBundle\StorageBundle(),
         );
@@ -40,6 +43,7 @@ First configure Gaufrette adapter and filesystem ([Gaufrette configuration](http
 	
 	imports:
         // ...
+        // If you will use remote client for storage (optional)
         - { resource: @StorageBundle/Resources/config/gearman.yml }
 	// ...
 	
@@ -59,19 +63,20 @@ Then specify filesystem name for ITMStorageBundle:
 
 	# ITMStorageBundle Configuration
 	storage:
-	    # Gaufrette filesystem name
+	    # Gaufrette filesystem name (required)
 	    filesystem: itm
-	    
+
+	    # If you will use remote client for storage (optional)
 	    # Remote storage server address
 		server_address: 127.0.0.1:8001
-		
+
 		# Token for client authorization. Use UserCreate command for generate user token
         server_api_key: $2y$10$zDaFxjAgRt.QfJUucEolg.rOC8Cipwz9ECoJPVeJcHAel7ewQ9HwG
 		
 		# Remote storage server address
 		client_address: 127.0.0.1:8000
 
-Finally add routing and security configuration (for JSON API):
+Finally add routing and security configuration (If you will use storage JSON API):
 
 	# app/config/routing.yml
 	
