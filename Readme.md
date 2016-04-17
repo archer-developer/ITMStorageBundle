@@ -8,7 +8,7 @@ This Symfony bundle is provides easy API to save files with attributes into stor
 
 This bundle can be installed using [composer](https://getcomposer.org/):
 
-	php composer.phar require http://stash.itmclient.com/scm/sb/itmstoragebundle.git
+	php composer.phar require git@github.com:archer-developer/ITMStorageBundle.git
 	
 ### Register the bundle
 
@@ -21,11 +21,12 @@ This bundle can be installed using [composer](https://getcomposer.org/):
         $bundles = array(
     
         	// ...
-            new ITM\StorageBundle\StorageBundle(),
             new Knp\Bundle\GaufretteBundle\KnpGaufretteBundle(),
             new Knp\DoctrineBehaviors\Bundle\DoctrineBehaviorsBundle(),
             new Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle(),
             new Mmoreram\GearmanBundle\GearmanBundle(),
+            // ...
+            new ITM\StorageBundle\StorageBundle(),
         );
     
     	// ...
