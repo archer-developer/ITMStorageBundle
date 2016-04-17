@@ -85,14 +85,18 @@ class CallbackSubscriber implements EventSubscriberInterface, ContainerAwareInte
      */
     protected function doIt($event_code, $job_name, Event $event)
     {
-        $gearman = $this->container->get('gearman');
-
         $doctrine = $this->container->get('doctrine');
         $listeners = $doctrine->getManager()
             ->getRepository('StorageBundle:EventListener')
             ->findBy([
                 'event' => $event_code
             ]);
+
+        if(empty($listeners)){
+            return;
+        }
+
+        $gearman = $this->container->get('gearman');
 
         foreach($listeners as $listener){
             $gearman->doBackgroundJob($job_name, json_encode([
