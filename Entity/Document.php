@@ -42,7 +42,7 @@ class Document implements \JsonSerializable
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="documents")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user_id", nullable=true, referencedColumnName="id")
      **/
     protected $user;
 

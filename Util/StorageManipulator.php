@@ -4,14 +4,12 @@ namespace ITM\StorageBundle\Util;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;;
 use ITM\StorageBundle\Entity\Document;
-use ITM\StorageBundle\Entity\EventListener;
 use ITM\StorageBundle\Entity\User;
 use ITM\StorageBundle\Event\AddDocumentEvent;
 use ITM\StorageBundle\Event\DeleteDocumentEvent;
 use ITM\StorageBundle\Event\DocumentEvents;
 use ITM\StorageBundle\Event\RestoreDocumentEvent;
 use Knp\Bundle\GaufretteBundle\FilesystemMap;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -49,12 +47,13 @@ class StorageManipulator
      * Copy file in storage and create Document
      *
      * @param $file_path
+     * @param User $user
      * @param string $attributes
      * @param string $name
      * @return Document
      * @throws \Exception
      */
-    public function store($file_path, User $user, $attributes = '', $name = null)
+    public function store($file_path, User $user = null, $attributes = '', $name = null)
     {
         if (!file_exists($file_path)) {
             throw new \Exception('File not found: ' . $file_path);
