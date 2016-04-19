@@ -5,7 +5,6 @@ namespace ITM\StorageBundle\Tests\Command;
 use ITM\StorageBundle\Command\UserCreateCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\DependencyInjection\Container;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
@@ -40,7 +39,9 @@ class UserTest extends WebTestCase
      */
     public function tearDown()
     {
-        $this->_em->rollback();
+        if($this->_em){
+            $this->_em->rollback();
+        }
     }
 
     public function testAdd()
