@@ -26,7 +26,9 @@ class StorageExtension extends Extension
         $loader->load('services.yml');
 
         $container->setParameter('itm.storage.filesystem_name', $config['filesystem']);
-        $container->setParameter('itm.storage.servers', $config['servers']);
-        $container->setParameter('itm.storage.client_address', $config['client_address']);
+
+        $container->setParameter('itm.storage.server_address', (!empty($config['server_address'])) ? $config['server_address'] : null);
+        $container->setParameter('itm.storage.server_api_key', (!empty($config['server_api_key'])) ? $config['server_api_key'] : null);
+        $container->setParameter('itm.storage.client_address', (!empty($config['client_address'])) ? $config['client_address'] : null);
     }
 }

@@ -29,23 +29,15 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('filesystem')
                     ->isRequired()
                 ->end()
-                ->arrayNode('servers')
-                    ->prototype('array')
-                        ->children()
-                            ->scalarNode('address')
-                                ->isRequired()
-                                ->cannotBeEmpty()
-                            ->end()
-                            ->scalarNode('api_key')
-                                ->isRequired()
-                                ->cannotBeEmpty()
-                            ->end()
-                        ->end()
-                    ->end()
+
+                ->scalarNode('server_address')
+
+                ->end()
+                ->scalarNode('server_api_key')
+
                 ->end()
                 ->scalarNode('client_address')
-                    ->isRequired()
-                    ->cannotBeEmpty()
+
                 ->end()
             ->end();
 

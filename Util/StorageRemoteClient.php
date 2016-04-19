@@ -9,6 +9,7 @@
 namespace ITM\StorageBundle\Util;
 
 
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Router;
@@ -30,14 +31,26 @@ class StorageRemoteClient
 
     /**
      * @param Router $router
-     * @param $servers
+     * @param $server_address
+     * @param $api_key
      * @param $client_address
      */
-    public function __construct(Router $router, $servers, $client_address)
+    public function __construct(Router $router, $server_address, $api_key, $client_address)
     {
-        $this->servers = $servers;
+        $this->servers = array(
+            array(
+                'address' => $server_address,
+                'api_key' => $api_key,
+            )
+        );
         $this->client_address = $client_address;
         $this->router = $router;
+
+        if($server_address === null || $api_key === null || $client_address === null){
+            throw new InvalidConfigurationException('
+                For using itm.storage.remote_client you must configure
+                \'servers\' section. See bundle documentation');
+        }
 
         $this->curl = curl_init();
 

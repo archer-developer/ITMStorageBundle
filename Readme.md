@@ -2,13 +2,21 @@
 
 This Symfony bundle is provides easy API to save files with attributes into storage (filesystem, cloud storages, ftp etc.). It requires [KnpGaufretteBundle](https://github.com/KnpLabs/KnpGaufretteBundle).
 
-## Instalation
+## Installation
 
 ### With composer
 
-This bundle can be installed using [composer](https://getcomposer.org/):
+This bundle can be installed using [composer](https://getcomposer.org/). Add custom repository to composer.json:
 
-	php composer.phar require http://stash.itmclient.com/scm/sb/itmstoragebundle.git
+    # ...
+    "repositories": [{
+        "type": "vcs",
+        "url": "git@github.com:archer-developer/ITMStorageBundle.git"
+    }],
+
+Install bundle:
+
+	php composer.phar require itm/storage-bundle
 	
 ### Register the bundle
 
@@ -21,11 +29,15 @@ This bundle can be installed using [composer](https://getcomposer.org/):
         $bundles = array(
     
         	// ...
-            new ITM\StorageBundle\StorageBundle(),
             new Knp\Bundle\GaufretteBundle\KnpGaufretteBundle(),
             new Knp\DoctrineBehaviors\Bundle\DoctrineBehaviorsBundle(),
+
+            // If you will use remote client for storage (optional)
             new Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle(),
             new Mmoreram\GearmanBundle\GearmanBundle(),
+
+            // ...
+            new ITM\StorageBundle\StorageBundle(),
         );
     
     	// ...
@@ -39,6 +51,7 @@ First configure Gaufrette adapter and filesystem ([Gaufrette configuration](http
 	
 	imports:
         // ...
+        // If you will use remote client for storage (optional)
         - { resource: @StorageBundle/Resources/config/gearman.yml }
 	// ...
 	
@@ -58,8 +71,9 @@ Then specify filesystem name for ITMStorageBundle:
 
 	# ITMStorageBundle Configuration
 	storage:
-	    # Gaufrette filesystem name
+	    # Gaufrette filesystem name (required)
 	    filesystem: itm
+<<<<<<< HEAD
 	    
 		# Remote storage servers
 		servers:
@@ -69,8 +83,12 @@ Then specify filesystem name for ITMStorageBundle:
 	
 		# Client address
 		client_address: http://localhost:8000/app_dev.php
+=======
 
-Finally add routing and security configuration (for JSON API):
+
+>>>>>>> develop
+
+Finally add routing and security configuration (If you will use storage JSON API):
 
 	# app/config/routing.yml
 	

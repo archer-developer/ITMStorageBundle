@@ -5,22 +5,23 @@ services:
     itm.storage:
         class: ITM\StorageBundle\Util\StorageManipulator
         arguments:
-            - @knp_gaufrette.filesystem_map
-            - @doctrine
-            - %itm.storage.filesystem_name%
-            - @event_dispatcher
+            - "@knp_gaufrette.filesystem_map"
+            - "@doctrine"
+            - "%itm.storage.filesystem_name%"
+            - "@event_dispatcher"
 
     itm.storage.remote_client:
         class: ITM\StorageBundle\Util\StorageRemoteClient
         arguments:
-            - @router
-            - %itm.storage.servers%
-            - %itm.storage.client_address%
+            - "@router"
+            - "%itm.storage.server_address%"
+            - "%itm.storage.server_api_key%"
+            - "%itm.storage.client_address%"
 
     itm.storage.api_key_user_provider:
         class: ITM\StorageBundle\Security\APIKeyUserProvider
         arguments:
-            - @doctrine
+            - "@doctrine"
 
     itm.storage.api_key_authenticator:
         class:  ITM\StorageBundle\Security\APIKeyAuthenticator
@@ -29,6 +30,6 @@ services:
     itm.storage.callback_subscriber:
         class: ITM\StorageBundle\Event\CallbackSubscriber
         calls:
-            - [ setContainer, [ @service_container ] ]
+            - [ setContainer, [ "@service_container" ] ]
         tags:
             - { name: kernel.event_subscriber }
