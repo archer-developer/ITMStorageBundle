@@ -6,9 +6,17 @@ This Symfony bundle is provides easy API to save files with attributes into stor
 
 ### With composer
 
-This bundle can be installed using [composer](https://getcomposer.org/):
+This bundle can be installed using [composer](https://getcomposer.org/). Add custom repository to composer.json:
 
-	php composer.phar require git@github.com:archer-developer/ITMStorageBundle.git
+    # ...
+    "repositories": [{
+        "type": "vcs",
+        "url": "git@github.com:archer-developer/ITMStorageBundle.git"
+    }],
+
+Install bundle:
+
+	php composer.phar require itm/storage-bundle
 	
 ### Register the bundle
 
