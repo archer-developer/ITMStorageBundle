@@ -1,6 +1,6 @@
 # ITM Storage Bundle #
 
-This Symfony bundle is provides easy API to save files with attributes into storage (filesystem, cloud storages, ftp etc.). It requires [KnpGaufretteBundle](https://github.com/KnpLabs/KnpGaufretteBundle).
+This Symfony bundle provides easy API to save files with attributes into storage (filesystem, cloud storages, ftp etc.). It requires [KnpGaufretteBundle](https://github.com/KnpLabs/KnpGaufretteBundle).
 
 ## Installation
 
