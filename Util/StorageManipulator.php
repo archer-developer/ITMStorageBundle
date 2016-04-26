@@ -76,7 +76,14 @@ class StorageManipulator
         $id = $document->getId();
         $path = join('/', self::splitStringIntoPairs($id)) . '/' . $id;
         $extension = pathinfo($file_path, PATHINFO_EXTENSION);
-        if ($extension) $path .= '.' . $extension;
+        $base_path = $path;
+        if ($extension){
+            $path = $base_path . '.' . $extension;
+        }
+        // If file exists generate unique name with time hash
+        if($this->filesystem->has($path)){
+            $path = $base_path . '.' . md5(time()) . '.' . $extension;
+        }
 
         // Copy file into storage
         $content = file_get_contents($file_path);
