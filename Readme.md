@@ -73,20 +73,6 @@ Then specify filesystem name for ITMStorageBundle:
 	storage:
 	    # Gaufrette filesystem name (required)
 	    filesystem: itm
-<<<<<<< HEAD
-	    
-		# Remote storage servers
-		servers:
-			- {address: http://localhost:8001, api_key: token1}
-			- {address: http://localhost:8002, api_key: token2}
-			- {address: http://localhost:8003, api_key: token3}
-	
-		# Client address
-		client_address: http://localhost:8000/app_dev.php
-=======
-
-
->>>>>>> develop
 
 Finally add routing and security configuration (If you will use storage JSON API):
 
