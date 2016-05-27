@@ -133,6 +133,11 @@ class StorageManipulator
         return $this->filesystem->read($document->getPath());
     }
 
+    public function getStream(Document $document)
+    {
+        return $this->filesystem->createStream($document->getPath());
+    }
+
     /**
      * Get file mime-type
      *
