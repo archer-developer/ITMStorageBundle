@@ -11,6 +11,7 @@ use ITM\StorageBundle\Event\DocumentEvents;
 use ITM\StorageBundle\Event\RestoreDocumentEvent;
 use Knp\Bundle\GaufretteBundle\FilesystemMap;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Сервис для выполнения операций над докуменртами локального хранилищем
@@ -46,17 +47,22 @@ class StorageManipulator
     /**
      * Copy file in storage and create Document
      *
-     * @param $file_path
+     * @param UploadedFile $file
      * @param User $user
      * @param string $attributes
      * @param string $name
      * @return Document
      * @throws \Exception
      */
-    public function store($file_path, User $user = null, $attributes = '', $name = null)
+    public function store(UploadedFile $file, User $user = null, $attributes = '', $name = null)
     {
+        $file_path = $file->getPathname();
         if (!file_exists($file_path)) {
             throw new \Exception('File not found: ' . $file_path);
+        }
+
+        if(!$name){
+            $name = $file->getClientOriginalName();
         }
 
         // Атомарное сохранение файла и сущности
