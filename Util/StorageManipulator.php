@@ -49,12 +49,12 @@ class StorageManipulator
      *
      * @param UploadedFile $file
      * @param User $user
-     * @param string $attributes
+     * @param mixed $attributes
      * @param string $name
      * @return Document
      * @throws \Exception
      */
-    public function store(UploadedFile $file, User $user = null, $attributes = '', $name = null)
+    public function store(UploadedFile $file, User $user = null, $attributes = null, $name = null)
     {
         $file_path = $file->getPathname();
         if (!file_exists($file_path)) {
@@ -71,7 +71,7 @@ class StorageManipulator
 
         // Create Document object
         $document = new Document();
-        $document->setName((is_string($name)) ? $name : basename($file_path));
+        $document->setName($name);
         $document->setUser($user);
         $document->setAttributes($attributes);
         $em = $this->doctrine->getManager();
@@ -81,7 +81,7 @@ class StorageManipulator
         // Generate path by id
         $id = $document->getId();
         $path = join('/', self::splitStringIntoPairs($id)) . '/' . $id;
-        $extension = pathinfo($file_path, PATHINFO_EXTENSION);
+        $extension = $file->getClientOriginalExtension();
         $base_path = $path;
         if ($extension){
             $path = $base_path . '.' . $extension;
@@ -123,22 +123,19 @@ class StorageManipulator
     /**
      * Get file content
      *
-     * @param $id
+     * @param Document $document
      * @throws \Exception
      * @return string|null
      */
-    public function getContent($id)
+    public function getContent(Document $document)
     {
-        $document = $this->get($id);
-        if (!$document) {
-            throw new \Exception('Document not found');
-        }
-
-        $this->filesystem->mimeType($document->getPath());
-
         return $this->filesystem->read($document->getPath());
     }
 
+    /**
+     * @param Document $document
+     * @return \Gaufrette\Stream|\Gaufrette\Stream\InMemoryBuffer
+     */
     public function getStream(Document $document)
     {
         return $this->filesystem->createStream($document->getPath());
@@ -147,34 +144,24 @@ class StorageManipulator
     /**
      * Get file mime-type
      *
-     * @param $id
+     * @param Document $document
      * @throws \Exception
      * @return srting|null
      */
-    public function getMimeType($id)
+    public function getMimeType(Document $document)
     {
-        $document = $this->get($id);
-        if (!$document) {
-            throw new \Exception('Document not found');
-        }
-
         return $this->filesystem->mimeType($document->getPath());
     }
 
     /**
      * Get file size
      *
-     * @param $id
+     * @param Document $document
      * @throws \Exception
      * @return string|null
      */
-    public function getSize($id)
+    public function getSize(Document $document)
     {
-        $document = $this->get($id);
-        if (!$document) {
-            throw new \Exception('Document not found');
-        }
-
         return $this->filesystem->size($document->getPath());
     }
 

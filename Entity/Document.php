@@ -139,12 +139,12 @@ class Document implements \JsonSerializable
     /**
      * Set attributes
      *
-     * @param string $attributes
+     * @param mixed $attributes
      * @return Document
      */
     public function setAttributes($attributes)
     {
-        $this->attributes = $attributes;
+        $this->attributes = serialize($attributes);
 
         return $this;
     }
@@ -152,11 +152,11 @@ class Document implements \JsonSerializable
     /**
      * Get attributes
      *
-     * @return string 
+     * @return mixed
      */
     public function getAttributes()
     {
-        return $this->attributes;
+        return unserialize($this->attributes);
     }
 
     /**
