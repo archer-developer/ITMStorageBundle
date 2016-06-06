@@ -3,6 +3,7 @@
 namespace ITM\StorageBundle\Util;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;;
+use Gaufrette\StreamMode;
 use ITM\StorageBundle\Entity\Document;
 use ITM\StorageBundle\Entity\User;
 use ITM\StorageBundle\Event\AddDocumentEvent;
@@ -21,6 +22,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class StorageManipulator
 {
+    const BUFFER_SIZE = 268435456; // 256Kb
+
     protected $filesystem; // Gaufrette filesystem
     protected $doctrine; // Doctrine registry
     protected $filesystem_name;
@@ -58,16 +61,12 @@ class StorageManipulator
     {
         $file_path = $file->getPathname();
         if (!file_exists($file_path)) {
-            throw new \Exception('File not found: ' . $file_path);
+            throw new \RuntimeException('File not found: ' . $file_path);
         }
 
         if(!$name){
             $name = $file->getClientOriginalName();
         }
-
-        // Атомарное сохранение файла и сущности
-        $con = $this->doctrine->getConnection();
-        $con->beginTransaction();
 
         // Create Document object
         $document = new Document();
@@ -76,10 +75,9 @@ class StorageManipulator
         $document->setAttributes($attributes);
         $em = $this->doctrine->getManager();
         $em->persist($document);
-        $em->flush();
 
-        // Generate path by id
-        $id = $document->getId();
+        // Generate path by hash
+        $id = time() . rand(10, 1000);
         $path = join('/', self::splitStringIntoPairs($id)) . '/' . $id;
         $extension = $file->getClientOriginalExtension();
         $base_path = $path;
@@ -90,17 +88,24 @@ class StorageManipulator
         if($this->filesystem->has($path)){
             $path = $base_path . '.' . md5(time()) . '.' . $extension;
         }
+        if($this->filesystem->has($path)){
+            throw new \RuntimeException('Storage: file with name ' . $path . ' already exists');
+        }
 
         // Copy file into storage
-        $content = file_get_contents($file_path);
-        $this->filesystem->write($path, $content);
+        $file = new \SplFileObject($file_path);
+        if(!$stream = $this->filesystem->createStream($path)){
+            throw new \RuntimeException('Storage: create stream error');
+        }
+        $stream->open(new StreamMode('w'));
+        while(!$file->eof()){
+            $stream->write($file->fread(self::BUFFER_SIZE));
+        }
+        $stream->close();
 
         // Update path in database
         $document->setPath($path);
         $em->persist($document);
-        $em->flush();
-
-        $con->commit();
 
         // Генерируем событие системы
         $event = new AddDocumentEvent($document);
@@ -185,13 +190,11 @@ class StorageManipulator
         if ($softDelete) {
             $document->setDeletedAt(new \DateTime());
             $em->persist($document);
-            $em->flush();
             return;
         }
 
         $path = $document->getPath();
         $em->remove($document);
-        $em->flush();
 
         $this->filesystem->delete($path);
 
@@ -219,13 +222,20 @@ class StorageManipulator
         $em = $this->doctrine->getManager();
         $document->setDeletedAt(null);
         $em->persist($document);
-        $em->flush();
 
         // Генерируем событие системы
         $event = new RestoreDocumentEvent($document);
         $this->event_dispatcher->dispatch(DocumentEvents::RESTORE_DOCUMENT, $event);
 
         return $document;
+    }
+
+    /**
+     * Flush changes
+     */
+    public function flush()
+    {
+        $this->doctrine->getManager()->flush();
     }
 
     /**
