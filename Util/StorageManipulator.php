@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class StorageManipulator
 {
-    const BUFFER_SIZE = 268435456; // 256Kb
+    const BUFFER_SIZE = 262144; // 256Kb
 
     protected $filesystem; // Gaufrette filesystem
     protected $doctrine; // Doctrine registry
