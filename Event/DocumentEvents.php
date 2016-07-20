@@ -9,7 +9,7 @@
 namespace ITM\StorageBundle\Event;
 
 /**
- * Класс описывающий события хранилища
+ * Storage events
  *
  * Class DocumentEvents
  * @package ITM\StorageBundle\Event
