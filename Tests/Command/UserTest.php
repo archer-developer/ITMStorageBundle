@@ -2,6 +2,7 @@
 
 namespace ITM\StorageBundle\Tests\Command;
 
+use Doctrine\ORM\EntityManager;
 use ITM\StorageBundle\Command\UserCreateCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
